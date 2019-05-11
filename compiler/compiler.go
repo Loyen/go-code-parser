@@ -1,8 +1,8 @@
 package compiler
 
 import (
-	"code/lexer"
-	"code/parser"
+	"github.com/loyen/code_parser/lexer"
+	"github.com/loyen/code_parser/parser"
 )
 
 // Compile by tokenizing source code and then processing the list of tokens

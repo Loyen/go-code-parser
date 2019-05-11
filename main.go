@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"code/compiler"
+	"github.com/loyen/code_parser/compiler"
 )
 
 func main() {

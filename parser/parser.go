@@ -2,7 +2,7 @@ package parser
 
 import (
 	"bytes"
-	"code/lexer"
+	"github.com/loyen/code_parser/lexer"
 	"strconv"
 )
 
