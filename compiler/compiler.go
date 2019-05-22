@@ -6,9 +6,13 @@ import (
 )
 
 // Compile by tokenizing source code and then processing the list of tokens
-func Compile(source string) string {
+func Compile(source string) (string, error) {
 	tokens := lexer.Tokenize(source)
-	code := parser.Parse(tokens)
+	code, err := parser.Parse(tokens)
 
-	return code
+	if err != nil {
+		return "", err
+	}
+
+	return code, nil
 }

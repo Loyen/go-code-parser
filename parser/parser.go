@@ -2,6 +2,7 @@ package parser
 
 import (
 	"bytes"
+	"errors"
 	"github.com/loyen/code_parser/lexer"
 	"strconv"
 )
@@ -11,54 +12,85 @@ var debugBuffer bytes.Buffer
 var tokens []lexer.Token
 
 // Parse a list of tokens and return the processed output
-func Parse(tokenList []lexer.Token) string {
+func Parse(tokenList []lexer.Token) (string, error) {
 	tokens = tokenList
 
+	var err error
+
 	for len(tokens) > 0 {
-		statement()
+		err = statement()
+
+		if err != nil {
+			return "", err
+		}
 	}
 
 	buffer.WriteString("\nDEBUGGER\n" + debugBuffer.String())
 
-	return buffer.String()
+	return buffer.String(), nil
 }
 
-func statement() {
-	token := shiftTokens()
+func statement() error {
+	token, err := shiftTokens()
+
+	if err != nil {
+		return err
+	}
 
 	switch token.Type {
 		case "print":
-			statementPrint()
+			err := statementPrint()
+
+			if err != nil {
+				return err
+			}
 		default:
-			expression()
+			return errors.New("Unknown token")
 	}
+
+	return nil
 }
 
-func statementPrint() {
-	buffer.WriteString(expression())
+func statementPrint() error {
+	expression, err := expression()
+
+	if err != nil {
+		return err
+	}
+
+	buffer.WriteString(expression)
+	return nil
 }
 
-func expression() string {
-	token := shiftTokens()
+func expression() (string, error) {
+	token, err := shiftTokens()
+
+	if err != nil {
+		return "", err
+	}
 
 	switch token.Type {
 		case "string":
-			return token.Value
+			return token.Value, nil
 		default:
-			return ""
+			return "", nil
 	}
 }
 
 
-func shiftTokens() lexer.Token {
+func shiftTokens() (lexer.Token, error) {
 	var token lexer.Token
+
+	if len(tokens) < 1 {
+		return token, errors.New("Unexpected end of file")
+	}
 
 	token = tokens[0]
 	tokens = tokens[1:]
 
 	debugToken(token)
 
-	return token
+	return token, nil
 }
 
 func debugToken(token lexer.Token) {
