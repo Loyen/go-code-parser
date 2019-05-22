@@ -3,6 +3,7 @@ package lexer
 import (
 	"bytes"
 	"unicode"
+	"errors"
 )
 
 type Token struct {
@@ -22,7 +23,7 @@ var buffer bytes.Buffer
 var tokens []Token
 
 // Tokenize a string of code
-func Tokenize(source string) []Token {
+func Tokenize(source string) ([]Token, error) {
 
 	mode = modeDefault
 
@@ -36,18 +37,28 @@ func Tokenize(source string) []Token {
 
 		switch mode {
 			case modeDefault:
-				processModeCode(character, line)
+				err := processModeCode(character, line)
+
+				if err != nil {
+					return nil, err
+				}
 			case modeString:
-				processModeString(character, line)
+				err := processModeString(character, line)
+
+				if err != nil {
+					return nil, err
+				}
+			default:
+				return nil, errors.New("Unknown lexer mode")
 		}
 	}
 
 	buffer.Reset()
 
-	return tokens
+	return tokens, nil
 }
 
-func processModeCode(character rune, line int) {
+func processModeCode(character rune, line int) error {
 	if !unicode.IsSpace(character) {
 		buffer.WriteString(string(character))
 	}
@@ -57,16 +68,19 @@ func processModeCode(character rune, line int) {
 		tokens = append(tokens, token)
 		buffer.Reset()
 
-		return
+		return nil
 	} else if string(character) == "\"" {
 		buffer.Reset()
 
 		mode = modeString
-		return
+
+		return nil
 	}
+
+	return nil
 }
 
-func processModeString(character rune, line int) {
+func processModeString(character rune, line int) error {
 	if string(character) == "\"" {
 		token := Token{ Line: line, Type: "string", Value: buffer.String() }
 		tokens = append(tokens, token)
@@ -74,8 +88,11 @@ func processModeString(character rune, line int) {
 		buffer.Reset()
 
 		mode = modeDefault
-		return
+
+		return nil
 	}
 
 	buffer.WriteString(string(character))
+
+	return nil
 }
