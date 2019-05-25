@@ -32,6 +32,8 @@ func Tokenize(source string) ([]Token, error) {
 	runes := []rune(source)
 	for _, character := range runes {
 		if string(character) == "\n" {
+			token := Token{ Line: line, Type: "command_end", Value: "" }
+			tokens = append(tokens, token)
 			line++
 		}
 
@@ -53,6 +55,10 @@ func Tokenize(source string) ([]Token, error) {
 		}
 	}
 
+	if (len(tokens) == 0 || tokens[len(tokens)-1].Type != "command_end") {
+		token := Token{ Line: line, Type: "command_end", Value: "" }
+		tokens = append(tokens, token)
+	}
 	buffer.Reset()
 
 	return tokens, nil

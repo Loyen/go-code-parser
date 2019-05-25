@@ -44,8 +44,10 @@ func statement() error {
 			if err != nil {
 				return err
 			}
+		case "command_end":
+			return nil
 		default:
-			return errors.New("Unknown token")
+			return errors.New("Unknown token \"" + token.Type + "\"")
 	}
 
 	return nil
@@ -55,6 +57,13 @@ func statementPrint() error {
 	expression, err := expression()
 
 	if err != nil {
+		return err
+	}
+
+	err = expectToken("command_end")
+	shiftTokens()
+
+	if (err != nil) {
 		return err
 	}
 
@@ -75,6 +84,21 @@ func expression() (string, error) {
 		default:
 			return "", nil
 	}
+}
+
+func expectToken(tokenType string) error {
+	if (len(tokens) < 1) {
+		return errors.New("Unexpected end of file")
+	}
+
+	var token lexer.Token
+	token = tokens[0]
+
+	if (token.Type == tokenType) {
+		return nil
+	}
+
+	return errors.New("Unexpected token: " + token.Type + ". Expected \"" + tokenType + "\"")
 }
 
 
