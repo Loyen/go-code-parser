@@ -81,6 +81,8 @@ func expression() (string, error) {
 	switch token.Type {
 		case "string":
 			return token.Value, nil
+		case "number":
+			return token.Value, nil
 		default:
 			return "", nil
 	}

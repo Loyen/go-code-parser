@@ -15,6 +15,7 @@ type Token struct {
 
 const modeDefault = 1
 const modeString = 2
+const modeNumber = 3
 
 var mode int
 
@@ -44,6 +45,12 @@ func Tokenize(source string) ([]Token, error) {
 				}
 			case modeString:
 				err := processModeString(character, line)
+
+				if err != nil {
+					return nil, err
+				}
+			case modeNumber:
+				err := processModeNumber(character, line)
 
 				if err != nil {
 					return nil, err
@@ -84,10 +91,36 @@ func processModeCode(character rune, line int) error {
 		mode = modeString
 
 		return nil
+	}else if unicode.IsDigit(character) {
+		buffer.Reset()
+
+		mode = modeNumber
+
+		buffer.WriteString(string(character))
+
+		return nil
 	}
 
 	return nil
 }
+
+func processModeNumber(character rune, line int) error {
+	if !unicode.IsDigit(character) {
+		token := Token{ Line: line, Type: "number", Value: buffer.String() }
+		tokens = append(tokens, token)
+
+		buffer.Reset()
+
+		mode = modeDefault
+
+		return nil
+	}
+
+	buffer.WriteString(string(character))
+
+	return nil
+}
+
 
 func processModeString(character rune, line int) error {
 	if string(character) == "\"" {
