@@ -32,8 +32,6 @@ func Tokenize(source string) ([]Token, error) {
 	runes := []rune(source)
 	for _, character := range runes {
 		if string(character) == "\n" {
-			token := Token{ Line: line, Type: "command_end", Value: "" }
-			tokens = append(tokens, token)
 			line++
 		}
 
@@ -69,7 +67,12 @@ func processModeCode(character rune, line int) error {
 		buffer.WriteString(string(character))
 	}
 
-	if buffer.String() == "print" {
+	if string(character) == "\n" {
+		token := Token{ Line: line, Type: "command_end", Value: "" }
+		tokens = append(tokens, token)
+
+		return nil
+	} else if buffer.String() == "print" {
 		token := Token{ Line: line, Type: "print", Value: "" }
 		tokens = append(tokens, token)
 		buffer.Reset()
