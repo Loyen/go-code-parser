@@ -3,7 +3,7 @@ package parser
 import (
 	"bytes"
 	"errors"
-	"github.com/loyen/code_parser/lexer"
+	"github.com/loyen/go-code-parser/lexer"
 	"strconv"
 )
 

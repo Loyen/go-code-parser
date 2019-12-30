@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"io/ioutil"
-	"github.com/loyen/code_parser/compiler"
+	"github.com/loyen/go-code-parser/compiler"
 )
 
 func main() {
