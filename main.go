@@ -17,21 +17,40 @@ func main() {
 
 	filepath = os.Args[1]
 
-	content, err := ioutil.ReadFile(filepath)
-
-	if err != nil {
-		fmt.Println("File could not be read")
-		return
-	}
-
-	source := string(content)
-
-	code, err := compiler.Compile(source)
+	output, err := RunFile(filepath)
 
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	fmt.Printf(code)
+	fmt.Println(output)
+}
+
+func RunFile(filepath string) (string, error) {
+	content, err := ioutil.ReadFile(filepath)
+
+	if err != nil {
+		return "", err
+	}
+
+	source := string(content)
+
+	output, err := Run(source)
+
+	if err != nil {
+		return "", err
+	}
+
+	return output, nil
+}
+
+func Run(source string) (string, error) {
+	output, err := compiler.Compile(source)
+
+	if err != nil {
+		return "", err
+	}
+
+	return output, nil
 }
