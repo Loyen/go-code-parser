@@ -25,8 +25,6 @@ func Parse(tokenList []lexer.Token) (string, error) {
 		}
 	}
 
-	buffer.WriteString("\nDEBUGGER\n" + debugBuffer.String())
-
 	return buffer.String(), nil
 }
 
