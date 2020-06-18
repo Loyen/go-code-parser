@@ -10,7 +10,7 @@ import (
 func main() {
 	var filepath string
 
-	if len(os.Args) < 1 {
+	if len(os.Args) < 2 {
 		fmt.Println("No file inputted")
 		return
 	}
