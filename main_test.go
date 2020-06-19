@@ -2,7 +2,7 @@ package main
 
 import "testing"
 
-func TestHello(t *testing.T) {
+func TestPrintHelloWorld(t *testing.T) {
 	expected := "Hello World!"
 
 	source := "print \"Hello World!\""
@@ -10,10 +10,10 @@ func TestHello(t *testing.T) {
 	value, err := Run(source)
 
 	if err != nil {
-		t.Errorf("TestHello returned error: %q", err)
+		t.Errorf("TestPrintHelloWorld returned error: %q", err)
 	}
 
 	if value != expected {
-		t.Errorf("TestHello returned %q, expected %q", value, expected)
+		t.Errorf("TestPrintHelloWorld returned %q, expected %q", value, expected)
 	}
 }
