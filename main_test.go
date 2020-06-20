@@ -23,9 +23,9 @@ func TestPrintNoExpressionGiven(t *testing.T) {
 
 	source := "print"
 
-	value, err := Run(source)
+	_, err := Run(source)
 
-	if value != "" && err.Error() == expectedError {
+	if err.Error() != expectedError {
 		t.Errorf("TestHello returned %q, expected %q", err, expectedError)
 	}
 }
